@@ -1,4 +1,3 @@
-
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { css } from 'styled-components';
@@ -58,7 +57,7 @@ const ItemP = styled.span`
 function Item({ text, isChecked, index }) {
     const { toggleTodo, removeTodo } = useContext(MyContext);
     //MyContext 안에 있는 함수들을 가져온다. (아까 Context.js에서 선언한 함수들)
-  
+
     return(
       <ItemDiv>
         {/* 체크 박스 부분 */}

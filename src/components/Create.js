@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
 import { css } from 'styled-components';
@@ -29,9 +29,9 @@ const Btn = styled.button`
     &:hover{
         background-color: #c1ddf5;
     }
-    //props 안에 push가 있을때 이 CSS를 실행시켜라
+    //props 안에 isShowAdd가 있을때 이 CSS를 실행시켜라
     ${props =>
-        props.push && css`
+        props.isShowAdd && css`
         transform: translate(-50%, -50%) rotate(45deg);
         background-color: white;
         color: #a7c6e8;
@@ -89,12 +89,13 @@ const Input = styled.input`
 
 
 function Create(){
-    const [push, setPush] = useState(false);
+  // $ << 임시속성 
+    const [$isShowAdd, setIsShowAdd] = useState(false);
     const [text, setText] = useState(''); 
     //MyContext에서 addtodo라는 함수를 가져옴. 할 일을 추가하는 함수
     const { addTodo } = useContext(MyContext); 
   
-    const toggle = () => setPush(prev => !prev);
+    const toggle = () => setIsShowAdd(prev => !prev);
   
     // 입력받은 값을 가져와 text 상태를 업데이트 한다
     // input에 텍스트가 입력되면 발생
@@ -109,11 +110,15 @@ function Create(){
       setText(''); // text 상태를 초기화 함 ''<< 빈 문자
       toggle(); // 토글 값을 호출
     };
-    // push가 안 돼.....
+
+    // 입력창을 닫으면 쓰던 내용을 초기화 시킴
+    useEffect(() => {
+      return setText('');
+    }, [$isShowAdd])
   
     return(
       <>  
-        {push && 
+        {$isShowAdd && 
           <Form onSubmit={handleSubmit}> {/* onSubmit: e.preventDefault() << 이거랑 세트로 쓴다 */}
             <Input 
               autoFocus 
@@ -123,8 +128,7 @@ function Create(){
             />
           </Form>
         }
-        
-        <Btn onClick={toggle} push={push}>
+        <Btn onClick={toggle} $isShowAdd={$isShowAdd}>
           <MdAdd />
         </Btn>
       </>
